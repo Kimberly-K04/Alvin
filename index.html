@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Alvin</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #0A0F1E; min-height: 100vh; overflow-x: hidden; }
+  .page { display: none; min-height: 100vh; }
+  .page.active { display: flex; }
+
+  #p1 { flex-direction: column; align-items: center; justify-content: center; padding: 3rem 2rem; background: #0A0F1E; position: relative; overflow: hidden; text-align: center; }
+  #p1::before { content: ''; position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(30,60,120,0.5) 0%, transparent 70%); top: -100px; right: -100px; border-radius: 50%; pointer-events: none; }
+  #p1::after { content: ''; position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(20,40,100,0.4) 0%, transparent 70%); bottom: -80px; left: -80px; border-radius: 50%; pointer-events: none; }
+  .p1-inner { position: relative; z-index: 1; max-width: 560px; }
+  .lego-flowers { width: 260px; height: 220px; margin: 0 auto 2rem; }
+  .hb-title { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 6vw, 3.4rem); color: #F5F0FF; line-height: 1.15; margin-bottom: 0.4rem; }
+  .hb-title span { font-style: italic; color: #7BA7FF; }
+  .hb-sub { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1rem; color: #5A6A8A; margin-bottom: 2rem; }
+  .hb-message { font-size: 1rem; color: #9AACCC; line-height: 1.75; max-width: 420px; margin: 0 auto 2.5rem; }
+  .btn-next { display: inline-flex; align-items: center; gap: 8px; background: #1E3A7A; color: #C8D8FF; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500; padding: 0.75rem 2rem; border: 1px solid #2E4E9A; border-radius: 100px; cursor: pointer; letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s; }
+  .btn-next:hover { background: #2A4E9E; transform: scale(1.02); }
+  .btn-next:active { transform: scale(0.98); }
+  .confetti-wrap { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .confetti-dot { position: absolute; border-radius: 2px; animation: confettiFall linear infinite; opacity: 0.5; }
+  @keyframes confettiFall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 0.7; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+
+  #p2 { flex-direction: column; align-items: center; padding: 3rem 1.5rem 4rem; background: #0A0F1E; }
+  .p2-header { text-align: center; margin-bottom: 2.5rem; }
+  .p2-tag { display: inline-block; background: #0F1E3A; color: #7BA7FF; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 14px; border-radius: 100px; margin-bottom: 0.75rem; border: 1px solid #1E3060; }
+  .p2-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 5vw, 2.6rem); color: #F5F0FF; line-height: 1.2; }
+  .p2-title span { font-style: italic; color: #7BA7FF; }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 680px; width: 100%; }
+  .card { background: #0E1628; border-radius: 20px; padding: 2rem 1.75rem; border: 1px solid #1A2A4A; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; position: relative; overflow: hidden; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); border-radius: 20px 20px 0 0; }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); border-color: var(--accent); }
+  .card:active { transform: translateY(-2px); }
+  .card-icon { width: 48px; height: 48px; border-radius: 14px; background: var(--icon-bg); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; font-size: 1.5rem; }
+  .card-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #E8F0FF; margin-bottom: 0.5rem; }
+  .card-desc { font-size: 0.9rem; color: #5A6A8A; line-height: 1.6; }
+  .card-cta { display: inline-flex; align-items: center; gap: 6px; margin-top: 1.25rem; font-size: 0.88rem; font-weight: 500; color: var(--accent); }
+
+  #p3 { flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1.5rem; background: #0A0F1E; min-height: 100vh; }
+  .letter-wrap { background: #0E1628; border-radius: 20px; padding: 2.5rem 2rem; max-width: 520px; width: 100%; border: 1px solid #1A2A4A; text-align: center; }
+  .letter-wrap h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #E8F0FF; margin-bottom: 0.5rem; }
+  .letter-wrap .sub { font-size: 0.92rem; color: #5A6A8A; margin-bottom: 2rem; line-height: 1.6; }
+  .qr-container { background: #F5F0FF; border-radius: 16px; padding: 1.25rem; display: inline-block; margin-bottom: 1rem; }
+  .back-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 1.5rem; background: none; border: 1px solid #1A2A4A; border-radius: 100px; padding: 0.6rem 1.5rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: #5A6A8A; cursor: pointer; transition: all 0.2s; }
+  .back-btn:hover { border-color: #7BA7FF; color: #C8D8FF; }
+
+  #p4 { flex-direction: column; align-items: center; padding: 3rem 1.5rem 4rem; background: #0A0F1E; min-height: 100vh; }
+  .coupon-header { text-align: center; margin-bottom: 2.5rem; }
+  .coupon-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 5vw, 2.4rem); color: #F5F0FF; margin-top: 0.5rem; }
+  .coupon-header h2 em { color: #7BA7FF; font-style: italic; }
+  .coupons-list { display: flex; flex-direction: column; gap: 1rem; max-width: 500px; width: 100%; }
+  .coupon { background: #0E1628; border-radius: 16px; padding: 1.5rem 1.75rem; border: 1px solid #1A2A4A; display: flex; align-items: center; gap: 1.25rem; position: relative; overflow: hidden; }
+  .coupon::after { content: ''; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; background: #0A0F1E; border-radius: 50%; border: 1px solid #1A2A4A; }
+  .coupon::before { content: ''; position: absolute; left: -12px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; background: #0A0F1E; border-radius: 50%; border: 1px solid #1A2A4A; }
+  .coupon-emoji { font-size: 2rem; flex-shrink: 0; width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+  .coupon-info { flex: 1; }
+  .coupon-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: #E8F0FF; margin-bottom: 0.25rem; }
+  .coupon-detail { font-size: 0.83rem; color: #5A6A8A; line-height: 1.5; }
+  .coupon-valid { font-size: 0.75rem; font-weight: 500; padding: 3px 10px; border-radius: 100px; white-space: nowrap; }
+  .back-btn-sm { margin-top: 2rem; background: none; border: 1px solid #1A2A4A; border-radius: 100px; padding: 0.6rem 1.5rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: #5A6A8A; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+  .back-btn-sm:hover { border-color: #7BA7FF; color: #C8D8FF; }
+
+  /* FLOWERS PAGE */
+  #p5 { flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1.5rem 4rem; background: #0A0F1E; min-height: 100vh; position: relative; overflow: hidden; text-align: center; }
+  .flowers-title { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 5vw, 2.4rem); color: #F5F0FF; margin-bottom: 0.5rem; position: relative; z-index: 2; }
+  .flowers-title em { font-style: italic; color: #FFFFFF; }
+  .flowers-sub { font-size: 0.95rem; color: #5A6A8A; margin-bottom: 2.5rem; position: relative; z-index: 2; }
+  .garden { position: relative; width: 100%; max-width: 500px; height: 420px; margin: 0 auto 2rem; z-index: 2; }
+  .petal { position: absolute; border-radius: 50% 0 50% 0; animation: petalFloat linear infinite; opacity: 0; pointer-events: none; }
+  @keyframes petalFloat {
+    0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.6; }
+    100% { transform: translateY(-100vh) rotate(720deg) translateX(60px); opacity: 0; }
+  }
+
+  #p-letter { flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1.5rem; background: #0A0F1E; min-height: 100vh; }
+  .letter-card { background: #0E1628; border-radius: 20px; padding: 3rem 2.5rem; max-width: 540px; width: 100%; border: 1px solid #1A2A4A; position: relative; }
+  .letter-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #7BA7FF; border-radius: 20px 20px 0 0; }
+  .letter-date { font-size: 0.82rem; color: #3A4A6A; margin-bottom: 2rem; }
+  .letter-body { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: #C8D8FF; line-height: 2; white-space: pre-line; }
+  .letter-sign { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; color: #7BA7FF; margin-top: 2rem; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1 -->
+<div class="page active" id="p1">
+  <div class="confetti-wrap" id="confetti"></div>
+  <div class="p1-inner">
+    <div class="lego-flowers">
+      <svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg" width="260" height="220">
+        <rect x="59" y="130" width="7" height="70" rx="3" fill="#3A7D44"/>
+        <rect x="127" y="115" width="7" height="85" rx="3" fill="#3A7D44"/>
+        <rect x="195" y="128" width="7" height="72" rx="3" fill="#3A7D44"/>
+        <ellipse cx="50" cy="155" rx="14" ry="7" fill="#5AAB5E" transform="rotate(-30 50 155)"/>
+        <ellipse cx="73" cy="162" rx="14" ry="7" fill="#5AAB5E" transform="rotate(25 73 162)"/>
+        <ellipse cx="118" cy="150" rx="14" ry="7" fill="#5AAB5E" transform="rotate(-25 118 150)"/>
+        <ellipse cx="141" cy="155" rx="14" ry="7" fill="#5AAB5E" transform="rotate(30 141 155)"/>
+        <ellipse cx="186" cy="153" rx="14" ry="7" fill="#5AAB5E" transform="rotate(-28 186 153)"/>
+        <ellipse cx="209" cy="158" rx="14" ry="7" fill="#5AAB5E" transform="rotate(28 209 158)"/>
+        <g transform="translate(62, 90)">
+          <rect x="-12" y="-28" width="24" height="18" rx="4" fill="#F4A0B5"/>
+          <rect x="-12" y="10" width="24" height="18" rx="4" fill="#F4A0B5"/>
+          <rect x="10" y="-12" width="18" height="24" rx="4" fill="#F4A0B5"/>
+          <rect x="-28" y="-12" width="18" height="24" rx="4" fill="#F4A0B5"/>
+          <circle cx="0" cy="-19" r="4" fill="#EE7FA0"/>
+          <circle cx="0" cy="19" r="4" fill="#EE7FA0"/>
+          <circle cx="19" cy="0" r="4" fill="#EE7FA0"/>
+          <circle cx="-19" cy="0" r="4" fill="#EE7FA0"/>
+          <rect x="-14" y="-14" width="28" height="28" rx="5" fill="#FFD166"/>
+          <circle cx="0" cy="0" r="6" fill="#FFB800"/>
+        </g>
+        <g transform="translate(131, 74)">
+          <rect x="-12" y="-28" width="24" height="18" rx="4" fill="#7BA7FF"/>
+          <rect x="-12" y="10" width="24" height="18" rx="4" fill="#7BA7FF"/>
+          <rect x="10" y="-12" width="18" height="24" rx="4" fill="#7BA7FF"/>
+          <rect x="-28" y="-12" width="18" height="24" rx="4" fill="#7BA7FF"/>
+          <circle cx="0" cy="-19" r="4" fill="#4A7AE0"/>
+          <circle cx="0" cy="19" r="4" fill="#4A7AE0"/>
+          <circle cx="19" cy="0" r="4" fill="#4A7AE0"/>
+          <circle cx="-19" cy="0" r="4" fill="#4A7AE0"/>
+          <rect x="-14" y="-14" width="28" height="28" rx="5" fill="#FFD166"/>
+          <circle cx="0" cy="0" r="6" fill="#FFB800"/>
+        </g>
+        <g transform="translate(198, 88)">
+          <rect x="-12" y="-28" width="24" height="18" rx="4" fill="#9B7FE8"/>
+          <rect x="-12" y="10" width="24" height="18" rx="4" fill="#9B7FE8"/>
+          <rect x="10" y="-12" width="18" height="24" rx="4" fill="#9B7FE8"/>
+          <rect x="-28" y="-12" width="18" height="24" rx="4" fill="#9B7FE8"/>
+          <circle cx="0" cy="-19" r="4" fill="#7B5FC8"/>
+          <circle cx="0" cy="19" r="4" fill="#7B5FC8"/>
+          <circle cx="19" cy="0" r="4" fill="#7B5FC8"/>
+          <circle cx="-19" cy="0" r="4" fill="#7B5FC8"/>
+          <rect x="-14" y="-14" width="28" height="28" rx="5" fill="#FFD166"/>
+          <circle cx="0" cy="0" r="6" fill="#FFB800"/>
+        </g>
+        <rect x="20" y="196" width="220" height="18" rx="4" fill="#3A7D44"/>
+        <circle cx="50" cy="196" r="5" fill="#2D6235"/>
+        <circle cx="80" cy="196" r="5" fill="#2D6235"/>
+        <circle cx="110" cy="196" r="5" fill="#2D6235"/>
+        <circle cx="140" cy="196" r="5" fill="#2D6235"/>
+        <circle cx="170" cy="196" r="5" fill="#2D6235"/>
+        <circle cx="200" cy="196" r="5" fill="#2D6235"/>
+        <circle cx="230" cy="196" r="5" fill="#2D6235"/>
+      </svg>
+    </div>
+    <p class="hb-sub">for you</p>
+    <h1 class="hb-title">Happy Birthday,<br><span>Love</span></h1>
+    <p class="hb-message">I tried putting this together for you.</p>
+    <button class="btn-next" onclick="goTo('p2')">
+      come on
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="p2">
+  <div class="p2-header">
+    <div class="p2-tag">done, with love</div>
+    <h1 class="p2-title">Your birthday<br><span>surprises</span></h1>
+  </div>
+  <div class="cards-grid">
+    <div class="card" style="--accent:#7BA7FF; --icon-bg:#0F1E3A" onclick="goTo('p3')">
+      <div class="card-icon">💌</div>
+      <div class="card-title">A letter for you</div>
+      <p class="card-desc">Something from the heart. Scan the QR code to read it whenever you need to.</p>
+      <div class="card-cta">Open letter <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+    <div class="card" style="--accent:#9B7FE8; --icon-bg:#150F2A" onclick="goTo('p4')">
+      <div class="card-icon">🎟️</div>
+      <div class="card-title">Birthday coupons</div>
+      <p class="card-desc">Redeemable any time. A dinner, a movie, and maybe some Lego — valid for life.</p>
+      <div class="card-cta">View coupons <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: QR -->
+<div class="page" id="p3">
+  <div class="letter-wrap">
+    <h2>A letter for you 💌</h2>
+    <p class="sub">Scan this with your camera to read something written just for you.</p>
+    <div class="qr-container">
+      <div id="qr-box"></div>
+    </div>
+    <br>
+    <button class="back-btn" onclick="goTo('p2')">← Back</button>
+  </div>
+</div>
+
+<!-- PAGE 4: COUPONS -->
+<div class="page" id="p4">
+  <div class="coupon-header">
+    <div class="p2-tag" style="background:#150F2A; color:#9B7FE8; border-color:#2A1A4A;">redeemable anytime</div>
+    <h2>Your birthday <em>coupons</em></h2>
+  </div>
+  <div class="coupons-list">
+    <div class="coupon">
+      <div class="coupon-emoji" style="background:#0F1A30;">🍽️</div>
+      <div class="coupon-info">
+        <div class="coupon-name">Free Dinner</div>
+        <div class="coupon-detail">One dinner, your choice of restaurant. No conditions.</div>
+      </div>
+      <div class="coupon-valid" style="background:#0F1E3A; color:#7BA7FF;">Jun 2027</div>
+    </div>
+    <div class="coupon">
+      <div class="coupon-emoji" style="background:#0F1A30;">🎬</div>
+      <div class="coupon-info">
+        <div class="coupon-name">Movie of Your Choice</div>
+        <div class="coupon-detail">Your pick.</div>
+      </div>
+      <div class="coupon-valid" style="background:#0F1E3A; color:#7BA7FF;">Lifetime</div>
+    </div>
+    <div class="coupon">
+      <div class="coupon-emoji" style="background:#150F2A;">🧱</div>
+      <div class="coupon-info">
+        <div class="coupon-name">Any Lego Set(s) of Choice</div>
+        <div class="coupon-detail"><em style="color:#3A4A6A;">This shall await employment.</em></div>
+      </div>
+      <div class="coupon-valid" style="background:#150F2A; color:#9B7FE8;">Post-job</div>
+    </div>
+    <div class="coupon">
+      <div class="coupon-emoji" style="background:#0A1F18;">🥾</div>
+      <div class="coupon-info">
+        <div class="coupon-name">You Owe Me a Hike</div>
+        <div class="coupon-detail">One hike, and I pick the trail. No skipping, no excuses.</div>
+      </div>
+      <div class="coupon-valid" style="background:#0A1F18; color:#5AAB5E;">Lifetime</div>
+    </div>
+  </div>
+  <button class="back-btn-sm" onclick="goTo('p5')" style="margin-top:2rem; border-color:#2A1A4A; color:#9B7FE8;">
+    one more thing
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="back-btn-sm" onclick="goTo('p2')">← Back</button>
+</div>
+
+<!-- PAGE 5: DAISIES -->
+<div class="page" id="p5">
+  <div style="position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none;" id="petal-container"></div>
+  <div style="position:relative;z-index:2;text-align:center;max-width:500px;width:100%;padding:0 1.5rem;">
+    <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:0.95rem;color:#5A6A8A;margin-bottom:0.5rem;">from me, to you</p>
+    <h2 class="flowers-title">Flowers for you?<br><em>well, sort off</em></h2>
+    <p class="flowers-sub" style="margin-top:0.75rem;">Happy Birthday, Alvin.</p>
+
+    <div class="garden" id="garden">
+      <svg viewBox="0 0 500 420" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+        <!-- Stems -->
+        <rect x="68" y="240" width="8" height="140" rx="4" fill="#2D6235"/>
+        <rect x="148" y="210" width="8" height="170" rx="4" fill="#2D6235"/>
+        <rect x="228" y="200" width="8" height="180" rx="4" fill="#2D6235"/>
+        <rect x="308" y="215" width="8" height="165" rx="4" fill="#2D6235"/>
+        <rect x="388" y="235" width="8" height="145" rx="4" fill="#2D6235"/>
+        <!-- Leaves -->
+        <ellipse cx="58" cy="295" rx="20" ry="9" fill="#3A7D44" transform="rotate(-35 58 295)" opacity="0.9"/>
+        <ellipse cx="82" cy="310" rx="20" ry="9" fill="#3A7D44" transform="rotate(30 82 310)" opacity="0.9"/>
+        <ellipse cx="138" cy="270" rx="20" ry="9" fill="#3A7D44" transform="rotate(-30 138 270)" opacity="0.9"/>
+        <ellipse cx="162" cy="285" rx="20" ry="9" fill="#3A7D44" transform="rotate(28 162 285)" opacity="0.9"/>
+        <ellipse cx="218" cy="260" rx="20" ry="9" fill="#3A7D44" transform="rotate(-32 218 260)" opacity="0.9"/>
+        <ellipse cx="242" cy="278" rx="20" ry="9" fill="#3A7D44" transform="rotate(32 242 278)" opacity="0.9"/>
+        <ellipse cx="298" cy="272" rx="20" ry="9" fill="#3A7D44" transform="rotate(-28 298 272)" opacity="0.9"/>
+        <ellipse cx="322" cy="286" rx="20" ry="9" fill="#3A7D44" transform="rotate(30 322 286)" opacity="0.9"/>
+        <ellipse cx="378" cy="290" rx="20" ry="9" fill="#3A7D44" transform="rotate(-30 378 290)" opacity="0.9"/>
+        <ellipse cx="402" cy="305" rx="20" ry="9" fill="#3A7D44" transform="rotate(28 402 305)" opacity="0.9"/>
+
+        <!-- Daisy 1 -->
+        <g transform="translate(72, 195)">
+          <g fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1">
+            <ellipse cx="0" cy="-18" rx="8" ry="22" />
+            <ellipse cx="0" cy="18" rx="8" ry="22" />
+            <ellipse cx="-18" cy="0" rx="22" ry="8" />
+            <ellipse cx="18" cy="0" rx="22" ry="8" />
+            <ellipse cx="-13" cy="-13" rx="8" ry="22" transform="rotate(45 -13 -13)" />
+            <ellipse cx="13" cy="13" rx="8" ry="22" transform="rotate(45 13 13)" />
+            <ellipse cx="-13" cy="13" rx="8" ry="22" transform="rotate(-45 -13 13)" />
+            <ellipse cx="13" cy="-13" rx="8" ry="22" transform="rotate(-45 13 -13)" />
+          </g>
+          <circle cx="0" cy="0" r="11" fill="#FFD700"/>
+          <circle cx="0" cy="0" r="7" fill="#F59E0B"/>
+        </g>
+
+        <!-- Daisy 2 -->
+        <g transform="translate(152, 160)">
+          <g fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1">
+            <ellipse cx="0" cy="-18" rx="8" ry="22" />
+            <ellipse cx="0" cy="18" rx="8" ry="22" />
+            <ellipse cx="-18" cy="0" rx="22" ry="8" />
+            <ellipse cx="18" cy="0" rx="22" ry="8" />
+            <ellipse cx="-13" cy="-13" rx="8" ry="22" transform="rotate(45 -13 -13)" />
+            <ellipse cx="13" cy="13" rx="8" ry="22" transform="rotate(45 13 13)" />
+            <ellipse cx="-13" cy="13" rx="8" ry="22" transform="rotate(-45 -13 13)" />
+            <ellipse cx="13" cy="-13" rx="8" ry="22" transform="rotate(-45 13 -13)" />
+          </g>
+          <circle cx="0" cy="0" r="11" fill="#FFD700"/>
+          <circle cx="0" cy="0" r="7" fill="#F59E0B"/>
+        </g>
+
+        <!-- Daisy 3 -->
+        <g transform="translate(232, 150)">
+          <g fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1">
+            <ellipse cx="0" cy="-18" rx="8" ry="22" />
+            <ellipse cx="0" cy="18" rx="8" ry="22" />
+            <ellipse cx="-18" cy="0" rx="22" ry="8" />
+            <ellipse cx="18" cy="0" rx="22" ry="8" />
+            <ellipse cx="-13" cy="-13" rx="8" ry="22" transform="rotate(45 -13 -13)" />
+            <ellipse cx="13" cy="13" rx="8" ry="22" transform="rotate(45 13 13)" />
+            <ellipse cx="-13" cy="13" rx="8" ry="22" transform="rotate(-45 -13 13)" />
+            <ellipse cx="13" cy="-13" rx="8" ry="22" transform="rotate(-45 13 -13)" />
+          </g>
+          <circle cx="0" cy="0" r="11" fill="#FFD700"/>
+          <circle cx="0" cy="0" r="7" fill="#F59E0B"/>
+        </g>
+
+        <!-- Daisy 4 -->
+        <g transform="translate(312, 165)">
+          <g fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1">
+            <ellipse cx="0" cy="-18" rx="8" ry="22" />
+            <ellipse cx="0" cy="18" rx="8" ry="22" />
+            <ellipse cx="-18" cy="0" rx="22" ry="8" />
+            <ellipse cx="18" cy="0" rx="22" ry="8" />
+            <ellipse cx="-13" cy="-13" rx="8" ry="22" transform="rotate(45 -13 -13)" />
+            <ellipse cx="13" cy="13" rx="8" ry="22" transform="rotate(45 13 13)" />
+            <ellipse cx="-13" cy="13" rx="8" ry="22" transform="rotate(-45 -13 13)" />
+            <ellipse cx="13" cy="-13" rx="8" ry="22" transform="rotate(-45 13 -13)" />
+          </g>
+          <circle cx="0" cy="0" r="11" fill="#FFD700"/>
+          <circle cx="0" cy="0" r="7" fill="#F59E0B"/>
+        </g>
+
+        <!-- Daisy 5 -->
+        <g transform="translate(392, 185)">
+          <g fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1">
+            <ellipse cx="0" cy="-18" rx="8" ry="22" />
+            <ellipse cx="0" cy="18" rx="8" ry="22" />
+            <ellipse cx="-18" cy="0" rx="22" ry="8" />
+            <ellipse cx="18" cy="0" rx="22" ry="8" />
+            <ellipse cx="-13" cy="-13" rx="8" ry="22" transform="rotate(45 -13 -13)" />
+            <ellipse cx="13" cy="13" rx="8" ry="22" transform="rotate(45 13 13)" />
+            <ellipse cx="-13" cy="13" rx="8" ry="22" transform="rotate(-45 -13 13)" />
+            <ellipse cx="13" cy="-13" rx="8" ry="22" transform="rotate(-45 13 -13)" />
+          </g>
+          <circle cx="0" cy="0" r="11" fill="#FFD700"/>
+          <circle cx="0" cy="0" r="7" fill="#F59E0B"/>
+        </g>
+
+        <!-- Ground -->
+        <rect x="20" y="375" width="460" height="20" rx="6" fill="#1A3A20" opacity="0.6"/>
+        <rect x="20" y="388" width="460" height="12" rx="4" fill="#142E18" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:#9AACCC;max-width:360px;margin:0 auto 2rem;line-height:1.8;">
+      Every single one of these is for you. Just like everything else on this page.
+    </p>
+    <button class="back-btn-sm" onclick="goTo('p4')" style="justify-content:center;">← Back to coupons</button>
+  </div>
+</div>
+
+<!-- LETTER PAGE -->
+<div class="page" id="p-letter">
+  <div class="letter-card">
+    <p class="letter-date">June 2026</p>
+    <div class="letter-body">I find it funny, honestly. How someone can just walk into your life and become so important so fast. Eight months and I genuinely cannot imagine not having you around.<br><br>Every conversation, every moment we've shared you've become someone I care about more than I probably say out loud. You matter to me in a way that's hard to put into words, and I just want you to know that.<br><br>I pray this year is everything you deserve. That you wake up every day feeling loved, valued, and celebrated not just today but every day after this.<br><br>I love you 300, Alvin. Never forget that.</div>
+    <div class="letter-sign">Happy Birthday, handsome.</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  function goTo(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+    if (id === 'p3') drawQR();
+    if (id === 'p5') startPetals();
+  }
+
+  if (window.location.search.includes('letter=1')) goTo('p-letter');
+
+  let qrDrawn = false;
+  function drawQR() {
+    if (qrDrawn) return;
+    qrDrawn = true;
+    const url = window.location.href.split('?')[0] + '?letter=1';
+    try {
+      new QRCode(document.getElementById("qr-box"), {
+        text: url, width: 180, height: 180,
+        colorDark: "#0A0F1E", colorLight: "#F5F0FF",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    } catch(e) {
+      document.getElementById("qr-box").innerHTML = '<p style="color:#5A6A8A;font-size:0.85rem;padding:1rem;">QR will work once the site is live on tiiny.host</p>';
+    }
+  }
+
+  let petalsStarted = false;
+  function startPetals() {
+    if (petalsStarted) return;
+    petalsStarted = true;
+    const container = document.getElementById('petal-container');
+    // Pure white and yellow petals for the daisies
+    const colors = ['#FFFFFF','#F8FAFC','#FFD740','#FFFBEB','#F59E0B'];
+    for (let i = 0; i < 40; i++) {
+      const petal = document.createElement('div');
+      petal.className = 'petal';
+      const size = 8 + Math.random() * 14;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const left = Math.random() * 100;
+      const duration = 5 + Math.random() * 8;
+      const delay = Math.random() * 8;
+      petal.style.cssText = `
+        left: ${left}%; bottom: -20px;
+        width: ${size}px; height: ${size * 0.7}px;
+        background: ${color};
+        border-radius: 50% 0 50% 0;
+        animation: petalFloat ${duration}s ${delay}s linear infinite;
+        opacity: 0;
+        transform: rotate(${Math.random()*360}deg);
+      `;
+      container.appendChild(petal);
+    }
+  }
+
+  const confettiContainer = document.getElementById('confetti');
+  const colors = ['#7BA7FF','#FFD166','#9B7FE8','#F4A0B5','#5AAB5E','#4A7AE0'];
+  for (let i = 0; i < 28; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'confetti-dot';
+    dot.style.cssText = `left:${Math.random()*100}%;width:${4+Math.random()*6}px;height:${4+Math.random()*6}px;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${4+Math.random()*6}s;animation-delay:${Math.random()*5}s;border-radius:${Math.random()>0.5?'50%':'2px'};`;
+    confettiContainer.appendChild(dot);
+  }
+</script>
+</body>
+</html>
