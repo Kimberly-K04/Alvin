@@ -165,19 +165,19 @@
 <div class="page" id="p2">
   <div class="p2-header">
     <div class="p2-tag">done, with love</div>
-    <h1 class="p2-title">Your birthday<br><span>surprises</span></h1>
+    <h1 class="p2-title">Well, I know it ain'tall that but, it'ssorta all I can do rn.</span></h1>
   </div>
   <div class="cards-grid">
     <div class="card" style="--accent:#7BA7FF; --icon-bg:#0F1E3A" onclick="goTo('p3')">
       <div class="card-icon">💌</div>
       <div class="card-title">A letter for you</div>
-      <p class="card-desc">Something from the heart. Scan the QR code to read it whenever you need to.</p>
+      <p class="card-desc">I promise it's from my heart.</p>
       <div class="card-cta">Open letter <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     </div>
     <div class="card" style="--accent:#9B7FE8; --icon-bg:#150F2A" onclick="goTo('p4')">
       <div class="card-icon">🎟️</div>
       <div class="card-title">Birthday coupons</div>
-      <p class="card-desc">Redeemable any time. A dinner, a movie, and maybe some Lego — valid for life.</p>
+      <p class="card-desc">Redeemable any time. A dinner, a movie, and maybe some Lego, valid for life.</p>
       <div class="card-cta">View coupons <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     </div>
   </div>
@@ -187,7 +187,7 @@
 <div class="page" id="p3">
   <div class="letter-wrap">
     <h2>A letter for you 💌</h2>
-    <p class="sub">Scan this with your camera to read something written just for you.</p>
+    <p class="sub">Scan it!</p>
     <div class="qr-container">
       <div id="qr-box"></div>
     </div>
@@ -231,11 +231,12 @@
       <div class="coupon-emoji" style="background:#0A1F18;">🥾</div>
       <div class="coupon-info">
         <div class="coupon-name">You Owe Me a Hike</div>
-        <div class="coupon-detail">One hike, and I pick the trail. No skipping, no excuses.</div>
+        <div class="coupon-detail">One hike, and I pick the trail.</div>
       </div>
       <div class="coupon-valid" style="background:#0A1F18; color:#5AAB5E;">Lifetime</div>
     </div>
   </div>
+  <p>I'm sorry my creativity ran from my head on this one</p>
   <button class="back-btn-sm" onclick="goTo('p5')" style="margin-top:2rem; border-color:#2A1A4A; color:#9B7FE8;">
     one more thing
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -358,7 +359,7 @@
     </div>
 
     <p style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:#9AACCC;max-width:360px;margin:0 auto 2rem;line-height:1.8;">
-      Every single one of these is for you. Just like everything else on this page.
+     I love you.
     </p>
     <button class="back-btn-sm" onclick="goTo('p4')" style="justify-content:center;">← Back to coupons</button>
   </div>
@@ -397,7 +398,7 @@
         correctLevel: QRCode.CorrectLevel.H
       });
     } catch(e) {
-      document.getElementById("qr-box").innerHTML = '<p style="color:#5A6A8A;font-size:0.85rem;padding:1rem;">QR will work once the site is live on tiiny.host</p>';
+      document.getElementById("qr-box").innerHTML = '<p style="color:#5A6A8A;font-size:0.85rem;padding:1rem;"></p>';
     }
   }
 
@@ -406,8 +407,8 @@
     if (petalsStarted) return;
     petalsStarted = true;
     const container = document.getElementById('petal-container');
-    // Pure white and yellow petals for the daisies
-    const colors = ['#FFFFFF','#F8FAFC','#FFD740','#FFFBEB','#F59E0B'];
+   
+    const colors = ['#E8435A', '#D42E48', '#FF6B80', '#FF50A0', '#FFB3C6', '#FF80C0', '#B80060', '#FFC8D6', '#D62842', '#FF4D6D'];
     for (let i = 0; i < 40; i++) {
       const petal = document.createElement('div');
       petal.className = 'petal';
